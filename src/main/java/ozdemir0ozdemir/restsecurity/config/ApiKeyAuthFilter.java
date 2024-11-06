@@ -14,6 +14,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -29,9 +32,17 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
     private final AuthenticationManager authenticationManager;
     private final AntPathRequestMatcher matcher = new AntPathRequestMatcher("/api/**");
 
+    private final SecurityContextHolderStrategy securityContextHolderStrategy =
+            SecurityContextHolder.getContextHolderStrategy();
+
+    private final SecurityContextRepository securityContextRepository =
+            new RequestAttributeSecurityContextRepository();
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(!matcher.matches(request)){
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+        if (!matcher.matches(request)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -40,18 +51,20 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
         String apiSecret = request.getHeader(API_SECRET_HEADER);
 
         if (!StringUtils.hasText(apiKey) || !StringUtils.hasText(apiSecret)) {
-            throw new RuntimeException("Missing API Key or Secret!");
+//            throw new RuntimeException("Missing API Key or Secret!");
+            filterChain.doFilter(request, response);
+            return;
         }
 
         try {
-            SecurityContext context = SecurityContextHolder.createEmptyContext();
-            Authentication authentication =
-                    this.authenticationManager.authenticate(ApiKeyAuthenticationToken.unAuthenticated(apiKey, apiSecret));
+            SecurityContext context = securityContextHolderStrategy.createEmptyContext();
+            Authentication authentication = ApiKeyAuthenticationToken.unAuthenticated(apiKey, apiSecret);
+            authentication = this.authenticationManager.authenticate(authentication);
             context.setAuthentication(authentication);
 
-            SecurityContextHolder.setContext(context);
-        }
-        catch (AuthenticationException ex) {
+            securityContextHolderStrategy.setContext(context);
+            securityContextRepository.saveContext(context, request, response);
+        } catch (AuthenticationException ex) {
             response.setStatus(HttpStatus.I_AM_A_TEAPOT.value());
             response.getWriter().write(new ObjectMapper().writeValueAsString(handleUnAuthorizedRequest(ex)));
             return;
