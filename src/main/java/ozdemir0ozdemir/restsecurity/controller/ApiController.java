@@ -22,7 +22,7 @@ public class ApiController {
     @GetMapping("data")
     public ResponseEntity<String> getUnsecureData() {
         Authentication token =
-                 SecurityContextHolder.getContext().getAuthentication();
+                SecurityContextHolder.getContext().getAuthentication();
         String s = "Token : %s".formatted(token);
         return ResponseEntity.ok(s);
     }

@@ -5,7 +5,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-
 import java.util.Collections;
 
 public class ApiKeyAuthenticationProvider implements AuthenticationProvider {
@@ -24,7 +23,8 @@ public class ApiKeyAuthenticationProvider implements AuthenticationProvider {
             );
         }
 
-        throw new AuthenticationException("Authentication Not Verified: " + authentication ){};
+        throw new AuthenticationException("Authentication Not Verified: " + authentication) {
+        };
     }
 
     @Override
