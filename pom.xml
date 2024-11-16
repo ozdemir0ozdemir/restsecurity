@@ -54,6 +54,13 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+
+        <dependency>
+            <groupId>org.glowroot</groupId>
+            <artifactId>glowroot-agent-api</artifactId>
+            <version>0.14.0-beta.3</version>
+        </dependency>
     </dependencies>
 
     <build>

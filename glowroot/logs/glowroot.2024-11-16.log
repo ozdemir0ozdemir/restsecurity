@@ -1,0 +1,5 @@
+2024-11-16 19:00:31.236 INFO  org.glowroot - Glowroot version: 0.14.3-beta.5, built 2024-09-02 22:56:34 +0000
+2024-11-16 19:00:31.240 INFO  org.glowroot - Java version: 22.0.2 (Oracle Corporation / Windows 10)
+2024-11-16 19:00:31.241 INFO  org.glowroot - Java args: -javaagent:glowroot/glowroot.jar -XX:TieredStopAtLevel=1 -javaagent:D:\Program Files\JetBrains\IntelliJ IDEA 2024.1.4\lib\idea_rt.jar=60479:D:\Program Files\JetBrains\IntelliJ IDEA 2024.1.4\bin
+2024-11-16 19:00:32.712 WARN  org.glowroot - one or more important classes were loaded before Glowroot instrumentation could be applied to them: java.net.HttpURLConnection
+2024-11-16 19:00:34.653 INFO  org.glowroot - UI listening on 127.0.0.1:4000 (to access the UI from remote machines, change the bind address to 0.0.0.0, either in the Glowroot UI under Configuration > Web or directly in the admin.json file, and then restart JVM to take effect)

@@ -14,7 +14,6 @@ public class ApiKeyAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String apiKey = (String) authentication.getPrincipal();
         String apiSecret = (String) authentication.getCredentials();
-        System.out.println("MY PROVIDER");
         if ("valid-api-key".equals(apiKey) && "valid-api-secret".equals(apiSecret)) {
             return ApiKeyAuthenticationToken.authenticated(
                     apiKey,
@@ -29,7 +28,6 @@ public class ApiKeyAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> authentication) {
-        System.out.println("API-Key-------------------------------");
         return ApiKeyAuthenticationToken.class.equals(authentication);
     }
 }
